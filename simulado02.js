@@ -2,6 +2,7 @@ import fs from "fs";
 
 const raw = fs.readFileSync("dados01.txt", "utf8");// Leitura e parse do arquivo JSON
 const dadosBrutos= JSON.parse(raw);// Filtragem de dados inválidos
+const falhasErro= dadosBrutos.filter(item => item.status === "falha"); //
 const dados = JSON.parse(raw).filter(item =>
   item.orgao &&
   item.data &&
@@ -171,10 +172,7 @@ filter(item =>  item.status === "falha"
      && (!item.motivo 
      || item.motivo.trim() === ""));
 
-//console.log("Registros com erro de processamento:");
-//console.log(processamentoErro);
-//console.log("-------------------");
-// Exibir cada erro de forma organizada
+
 processamentoErro.forEach((item, index) => {
   console.log(`Repasse(s) com erro de processamento:${index + 1}`);
   console.log(`Órgão.............: ${item.orgao}`);
@@ -185,6 +183,14 @@ processamentoErro.forEach((item, index) => {
   console.log("------------------------------------");
 });
 console.log("--------------------------------------");
+// Valor tota de repsse que falhou sem erro de processamento
+const valorTotalFalhaSemErro = falhas.reduce((acc, item) => acc + item.valor, 0);
+console.log("Q04 - Valor total dos repasses com falha e Sem erro de processamento:", valorTotalFalhaSemErro.toFixed(2));
+
+// Valor total de repasses que falhou e com erro de processamento
+const valorTotalFalhaComErro = falhasErro.reduce((acc, item) => acc + item.valor, 0);
+console.log("Q04 - Valor total dos repasses com falha e Com erro de processamento:", valorTotalFalhaComErro.toFixed(2));
+console.log('------------------------------------');
 
 
 // Órgão definido automaticamente
